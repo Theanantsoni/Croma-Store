@@ -1,0 +1,427 @@
+<?php
+include "../Admin/croma_sql.php";
+?>
+
+<?php
+session_start();
+
+// Check if the action and product ID are set
+if (isset($_GET['action']) && isset($_GET['id'])) {
+    // Add the product to the cart
+    if ($_GET['action'] == 'add') {
+        $productId = $_GET['id'];
+
+        // Store product ID in session variable to simulate a cart
+        $_SESSION['cart'][] = $productId;
+
+        // Redirect back to the product listing page
+        header("Location: cart.php");
+        exit();
+    } elseif ($_GET['action'] == 'remove') { // Remove product from the cart
+        $productId = $_GET['id'];
+
+        // Find and remove the product ID from the cart session
+        if (($key = array_search($productId, $_SESSION['cart'])) !== false) {
+            unset($_SESSION['cart'][$key]);
+        }
+
+        // Redirect back to the cart page
+        header("Location: cart.php");
+        exit();
+    }
+}
+
+// Display cart content
+echo "<h1>Cart</h1>";
+if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+    // Fetch product details from the database based on the product IDs in the cart
+    $productIds = implode(',', $_SESSION['cart']);
+    $sql = "SELECT * FROM media WHERE id IN ($productIds)";
+    $result = mysqli_query($con, $sql);
+
+    // Display products in the cart in a table format
+    echo "<table border='1'>";
+    echo "<tr><th>Product ID</th><th>Image</th><th>Product Name</th><th>New Price</th><th>Old Price</th><th>Action</th></tr>";
+    while ($product = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td>" . $product['id'] . "</td>";
+        echo "<td><img src='../assests/uploads/" . $product['image'] . "' style='height: 100px;'></td>";
+        echo "<td>" . $product['productname'] . "</td>";
+        echo "<td>$" . $product['new_price'] . "</td>";
+        echo "<td>$" . $product['old_price'] . "</td>";
+        // Add a button to remove the product from the cart
+        echo "<td><a href='cart.php?action=remove&id=" . $product['id'] . "'>Remove</a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else {
+    echo "<p>Your cart is empty.</p>";
+}
+?>
+
+
+
+
+
+
+
+<?php
+include "../Admin/croma_sql.php";
+?>
+
+<?php
+session_start();
+
+// Check if the action and product ID are set
+if (isset($_GET['action']) && isset($_GET['id'])) {
+    // Add the product to the cart
+    if ($_GET['action'] == 'add') {
+        $productId = $_GET['id'];
+
+        // Check if the product is already in the cart
+        if (!isset($_SESSION['cart'][$productId])) {
+            // If not, initialize count to 1
+            $_SESSION['cart'][$productId] = 1;
+        } else {
+            // If yes, increment the count
+            $_SESSION['cart'][$productId]++;
+        }
+
+        // Redirect back to the product listing page
+        header("Location: cart.php");
+        exit();
+    } elseif ($_GET['action'] == 'remove') { // Remove product from the cart
+        $productId = $_GET['id'];
+
+        // Check if the product is in the cart
+        if (isset($_SESSION['cart'][$productId])) {
+            // If count is greater than 1, decrement the count
+            if ($_SESSION['cart'][$productId] > 1) {
+                $_SESSION['cart'][$productId]--;
+            } else {
+                // If count is 1, remove the product from the cart
+                unset($_SESSION['cart'][$productId]);
+            }
+        }
+
+        // Redirect back to the cart page
+        header("Location: cart.php");
+        exit();
+    }
+}
+
+// Display cart content
+echo "<h1>Cart</h1>";
+if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+    // Fetch product details from the database based on the product IDs in the cart
+    $productIds = implode(',', array_keys($_SESSION['cart']));
+    $sql = "SELECT * FROM media WHERE id IN ($productIds)";
+    $result = mysqli_query($con, $sql);
+
+    // Display products in the cart in a table format
+    echo "<table border='1'>";
+    echo "<tr><th>Product ID</th><th>Image</th><th>Product Name</th><th>New Price</th><th>Old Price</th><th>Count</th><th>Action</th></tr>";
+    while ($product = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td>" . $product['id'] . "</td>";
+        echo "<td><img src='../assests/uploads/" . $product['image'] . "' style='height: 100px;'></td>";
+        echo "<td>" . $product['productname'] . "</td>";
+        echo "<td>$" . $product['new_price'] . "</td>";
+        echo "<td>$" . $product['old_price'] . "</td>";
+        echo "<td>" . $_SESSION['cart'][$product['id']] . "</td>"; // Display product count
+        // Add buttons to remove or reduce the count of the product from the cart
+        echo "<td><a href='cart.php?action=remove&id=" . $product['id'] . "'>Remove</a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else {
+    echo "<p>Your cart is empty.</p>";
+}
+?>
+
+
+
+<?php
+include "../Admin/croma_sql.php";
+?>
+
+<?php
+session_start();
+
+// Check if the action and product ID are set
+if (isset($_GET['action']) && isset($_GET['id'])) {
+    // Add the product to the cart
+    if ($_GET['action'] == 'add') {
+        $productId = $_GET['id'];
+
+        // Check if the product is already in the cart
+        if (!isset($_SESSION['cart'][$productId])) {
+            // If not, initialize count to 1
+            $_SESSION['cart'][$productId] = 1;
+        } else {
+            // If yes, increment the count
+            $_SESSION['cart'][$productId]++;
+        }
+
+        // Redirect back to the product listing page
+        header("Location: cart.php");
+        exit();
+    } elseif ($_GET['action'] == 'remove') { // Remove product from the cart
+        $productId = $_GET['id'];
+
+        // Check if the product is in the cart
+        if (isset($_SESSION['cart'][$productId])) {
+            // If count is greater than 1, decrement the count
+            if ($_SESSION['cart'][$productId] > 1) {
+                $_SESSION['cart'][$productId]--;
+            } else {
+                // If count is 1, remove the product from the cart
+                unset($_SESSION['cart'][$productId]);
+            }
+        }
+
+        // Redirect back to the cart page
+        header("Location: cart.php");
+        exit();
+    }
+}
+
+// Display cart content
+echo "<h1>Add To Cart List</h1>";
+if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+    // Fetch product details from the database based on the product IDs in the cart
+    $productIds = implode(',', array_keys($_SESSION['cart']));
+    $sql = "SELECT * FROM media WHERE id IN ($productIds)";
+    $result = mysqli_query($con, $sql);
+
+    // Display products in the cart in a table format
+    echo "<table border='1'>";
+    echo "<tr>
+            <th>Product ID</th>
+            <th>Image</th>
+            <th>Product Name</th>
+            <th>New Price</th>
+            <th>Count</th>
+            <th>Total Price</th>
+            <th>Action</th>
+        </tr>";
+    while ($product = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td>" . $product['id'] . "</td>";
+        echo "<td><img src='../assests/uploads/" . $product['image'] . "' style='height: 100px;'></td>";
+        echo "<td>" . $product['productname'] . "</td>";
+        echo "<td>$" . $product['new_price'] . "</td>";
+        echo "<td>";
+        // Input field for count with plus and minus symbols
+        echo "<input type='button' value='-' onclick='decreaseCount(" . $product['id'] . ")'>";
+        echo "<input type='text' id='count_" . $product['id'] . "' value='" . $_SESSION['cart'][$product['id']] . "' style='width: 30px; text-align: center;' readonly>";
+        echo "<input type='button' value='+' onclick='increaseCount(" . $product['id'] . ")'>";
+        echo "</td>"; // Display product count
+        echo "<td id='total_price_" . $product['id'] . "' data-new-price='" . $product['new_price'] . "'>$" . ($_SESSION['cart'][$product['id']] * $product['new_price']) . "</td>"; // Display total price
+        // Add buttons to remove the product from the cart
+        echo "<td><a href='cart.php?action=remove&id=" . $product['id'] . "'>Remove</a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+} else {
+    echo "<p>Your cart is empty.</p>";
+}
+?>
+
+<script>
+    // Function to increase count
+    function increaseCount(productId) {
+        var countField = document.getElementById('count_' + productId);
+        var count = parseInt(countField.value);
+        count++;
+        countField.value = count;
+        updateTotalPrice(productId, count);
+    }
+
+    // Function to decrease count
+    function decreaseCount(productId) {
+        var countField = document.getElementById('count_' + productId);
+        var count = parseInt(countField.value);
+        if (count > 1) {
+            count--;
+            countField.value = count;
+            updateTotalPrice(productId, count);
+        }
+    }
+
+    // Function to update total price
+    function updateTotalPrice(productId, count) {
+        var newPrice = parseFloat(document.getElementById('total_price_' + productId).getAttribute('data-new-price'));
+        var totalPrice = newPrice * count;
+        document.getElementById('total_price_' + productId).innerHTML = "$" + totalPrice.toFixed(2);
+    }
+</script>
+
+
+------------------------------------------------------------------------------------------------
+
+
+
+<?php
+session_start();
+
+// Include database connection
+include "../Admin/croma_sql.php";
+
+// Function to update count in session
+function updateCountInSession($productId, $count) {
+    $_SESSION['cart'][$productId] = $count;
+}
+
+// Check if the action and product ID are set
+if (isset($_GET['action']) && isset($_GET['id'])) {
+    // Add or remove the product from the cart
+    $productId = $_GET['id'];
+    if ($_GET['action'] == 'add') {
+        if (!isset($_SESSION['cart'][$productId])) {
+            $_SESSION['cart'][$productId] = 1;
+        } else {
+            $_SESSION['cart'][$productId]++;
+        }
+    } elseif ($_GET['action'] == 'remove') {
+        if (isset($_SESSION['cart'][$productId])) {
+            if ($_SESSION['cart'][$productId] > 1) {
+                $_SESSION['cart'][$productId]--;
+            } else {
+                unset($_SESSION['cart'][$productId]);
+            }
+        }
+    }
+}
+
+echo "<div class='container'>";
+echo "<style>
+        .center {
+            margin: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 2px solid red;
+            padding: 8px;
+            text-align: center;
+        }
+        </style>";
+echo "<h1 class='text-center'>Add To Cart List</h1>";
+
+// Display the cart content
+if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+    // Fetch product details from the database based on the product IDs in the cart
+    $productIds = implode(',', array_keys($_SESSION['cart']));
+    $sql = "SELECT * FROM media WHERE id IN ($productIds)";
+    $result = mysqli_query($con, $sql);
+
+    // Display products in the cart in a table format
+    echo "<form action='cart.php' method='post'>";
+    echo "<div class='table-responsive'>";
+    echo "<table class='table table-bordered table-striped center'>";
+    echo "<thead class='thead-dark'>";
+    echo "<tr>
+            <th>No.</th>
+            <th>Image</th>
+            <th>Product Name</th>
+            <th>New Price</th>
+            <th>Count</th>
+            <th>Total Price</th>
+            <th>Action</th>
+        </tr>";
+    echo "</thead>";
+    $count = 1; // Initialize count variable
+    while ($product = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td>" . $count . "</td>";
+        echo "<td><img src='../assests/uploads/" . $product['image'] . "' style='height: 100px;'></td>";
+        echo "<td>" . $product['productname'] . "</td>";
+        echo "<td>$" . $product['new_price'] . "</td>";
+        echo "<td>";
+        // Input field for count with plus and minus symbols
+        echo "<input type='button' class='btn btn-secondary' value='-' onclick='decreaseCount(" . $product['id'] . ")'>";
+        echo "<input type='text' class='form-control' id='count_" . $product['id'] . "' value='" . $_SESSION['cart'][$product['id']] . "' style='width: 50px; text-align: center;' readonly>";
+        echo "<input type='button' class='btn btn-secondary' value='+' onclick='increaseCount(" . $product['id'] . ")'>";
+        echo "</td>"; // Display product count
+        echo "<td id='total_price_" . $product['id'] . "' data-new-price='" . $product['new_price'] . "'>$" . ($_SESSION['cart'][$product['id']] * $product['new_price']) . "</td>"; // Display total price
+        // Add buttons to remove the product from the cart
+        echo "<td><a href='cart.php?action=remove&id=" . $product['id'] . "' class='btn btn-danger'>Remove</a></td>";
+        echo "</tr>";
+        $count++; // Increment count variable
+    }
+    echo "</table>";
+    echo "</div>";
+
+    echo "</form>";
+} else {
+    echo "<p class='text-center'>Empty cart list.</p>";
+}
+echo "</div>";
+
+
+// Include Bootstrap JS if necessary
+
+?>
+
+
+
+<script>
+    // Function to increase count
+function increaseCount(productId) {
+    var countField = document.getElementById('count_' + productId);
+    var count = parseInt(countField.value);
+    count++;
+    countField.value = count;
+    updateTotalPrice(productId, count);
+    updateCountInSession(productId, count); // Update session data
+}
+
+// Function to decrease count
+function decreaseCount(productId) {
+    var countField = document.getElementById('count_' + productId);
+    var count = parseInt(countField.value);
+    if (count > 1) {
+        count--;
+        countField.value = count;
+        updateTotalPrice(productId, count);
+        updateCountInSession(productId, count); // Update session data
+    }
+}
+
+// Function to update total price
+function updateTotalPrice(productId, count) {
+    var newPrice = parseFloat(document.getElementById('total_price_' + productId).getAttribute('data-new-price'));
+    var totalPrice = newPrice * count;
+    document.getElementById('total_price_' + productId).innerHTML = "$" + totalPrice.toFixed(2);
+}
+
+// Function to update count in session storage
+function updateCountInSession(productId, count) {
+    // Store the count in session storage
+    sessionStorage.setItem('count_' + productId, count);
+}
+
+// Function to retrieve count from session storage
+function getCountFromSession(productId) {
+    // Retrieve count from session storage
+    var count = sessionStorage.getItem('count_' + productId);
+    // If count exists in session storage, return it. Otherwise, return 1.
+    return count ? parseInt(count) : 1;
+}
+
+// Function to load counts from session storage on page load
+window.onload = function() {
+    // Loop through all products to update their counts
+    var products = document.querySelectorAll('[id^="count_"]');
+    products.forEach(function(product) {
+        var productId = product.id.split('_')[1];
+        var count = getCountFromSession(productId);
+        product.value = count;
+        updateTotalPrice(productId, count);
+    });
+};
+
+</script>
